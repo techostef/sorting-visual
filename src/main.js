@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import App from './App.js';
 
 import "./assets/css/tailwind.css"
+import "./assets/css/tailwind-extend.css"
 
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
