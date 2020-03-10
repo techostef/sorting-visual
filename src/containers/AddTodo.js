@@ -7,12 +7,12 @@ const AddTodo = ({ dispatch }) => {
         <div>
             <form
                 onSubmit={e => {
-                e.preventDefault()
-                if (!input.value.trim()) {
-                    return
-                }
-                dispatch(addTodo(input.value))
-                input.value = ''
+                    e.preventDefault()
+                    if (!input.value.trim()) {
+                        return
+                    }
+                    dispatch(addTodo(input.value))
+                    input.value = ''
                 }}
             >
                 <input className="border-solid border-2" ref={node => (input = node)} />

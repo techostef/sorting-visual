@@ -17,3 +17,23 @@ export const VisibilityFilters = {
     SHOW_COMPLETED: 'SHOW_COMPLETED',
     SHOW_ACTIVE: 'SHOW_ACTIVE'
 }
+
+export const AddUser = (name, age, active = false) => ({
+    type: "AddUser",
+    Id: (new Date().getTime() + (Math.floor(Math.random() * 100) + 1)),
+    Name: name,
+    Age: age,
+    Active: active
+})
+
+export const EditUser = (id, name, age) => ({
+    type: "EditUser",
+    Id: id,
+    Name: name,
+    Age: age,
+})
+
+export const RemoveUser = (id) => ({
+    type: "RemoveUser",
+    Id: id
+})
