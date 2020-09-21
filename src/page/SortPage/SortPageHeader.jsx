@@ -66,7 +66,7 @@ const SortPageHeader = (props) => {
                     type="range" id="volume" 
                     name="volume"
                     min="5" 
-                    max="200"
+                    max="500"
                     value={props.settingsState.maxArray}
                     onChange={handleSettingsMaxArray}
                 />
