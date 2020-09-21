@@ -6,10 +6,12 @@ import "./assets/css/tailwind.css"
 import "./assets/css/tailwind-extend.css"
 
 import { Provider } from 'react-redux'
-import { createStore } from 'redux'
-import rootReducer from './reducers'
-const store = createStore(rootReducer)
+import rootReducer from './store/reducers'
+import { applyMiddleware, createStore } from 'redux';
+import thunk from 'redux-thunk';
+import logger from 'redux-logger';
 
+const store = createStore(rootReducer, applyMiddleware(thunk, logger));
 
 ReactDOM.render(
     <Provider store={store}>

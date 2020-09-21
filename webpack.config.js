@@ -7,7 +7,8 @@ module.exports = {
    output: {
       path: path.join(__dirname, '/www'),
       // filename: 'index_bundle.js'
-      filename: '[name].[contenthash].js',
+      // filename: '[name].[contenthash].js',
+      filename: '[name].[hash].js',
    },
    devServer: {
       inline: true,
@@ -40,14 +41,23 @@ module.exports = {
          {
             test: /\.(sa|sc|c)ss$/,
             use: ["style-loader", "css-loader", "sass-loader", "postcss-loader"]
+         }, {
+            test: /\.(jpe?g|png|gif|woff|woff2|eot|ttf)(\?[a-z0-9=.]+)?$/,
+            loader: 'url-loader?limit=100000' 
+         }, {
+            test: /\.svg$/,
+            use: ['@svgr/webpack', 'url-loader'],
          }
       ]
+   },
+   resolve: {
+      extensions: ['.js', '.jsx'],
    },
    plugins:[
       new CleanWebpackPlugin(),
       new HtmlWebpackPlugin({
          title: 'Caching',
-         template: './index.html'
+         template: './public/index.html'
       })
    ]
 }
