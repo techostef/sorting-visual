@@ -4,3 +4,9 @@ export const SORT_TYPE = {
     INSERT_SORT: 'Insert Sort',
     MERGE_SORT: 'Merge Sort',
 };
+
+export const TYPE_TIME = {
+    SECOND: "SECOND",
+    MINUTE: "MINUTE",
+    HOUR: "HOUR"
+}

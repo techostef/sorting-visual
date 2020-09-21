@@ -6,10 +6,16 @@ const init = {
     maxArray: 100,
     maxValue: 100,
     runSorting: false,
+    startSorting: null,
+    endSorting: null,
 }
 
 const settingsState = (state = init, action) => {
     switch(action.type) {
+        case ActionEnums.SETTINGS_STATE_SET_END_SORTING:
+            return Object.assign({}, state, {
+                endSorting: action.endSorting
+            })
         case ActionEnums.SETTINGS_STATE_SET_INDEX_SORT:
             return Object.assign({}, state, {
                 indexSort: parseInt(action.indexSort)
@@ -29,6 +35,10 @@ const settingsState = (state = init, action) => {
         case ActionEnums.SETTINGS_STATE_SET_RUN_SORTING:
             return Object.assign({}, state, {
                 runSorting: action.runSorting
+            })
+        case ActionEnums.SETTINGS_STATE_SET_START_SORTING:
+            return Object.assign({}, state, {
+                startSorting: action.startSorting
             })
         default: 
             return state

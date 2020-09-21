@@ -8,9 +8,11 @@ import * as dataVisualBusinessAction from "../../store/actions/business/dataVisu
 import * as sortBusinessAction from "../../store/actions/business/sortBusinessAction"
 import { bindActionCreators } from "redux"
 import InputDropDown from "../../components/inputs/InputDropDown"
+import { durationBetween } from "../../helper/dateHelper"
 
 const mapStateToProps = (state) => {
     return {
+        dataVisualState: state.dataVisualState,
         settingsState: state.settingsState,
         sortState: state.sortState,
     }
@@ -87,6 +89,21 @@ const SortPageHeader = (props) => {
                     onChange={handleSortChange}    
                 />
                 <label htmlFor="sorting">sorting</label>
+            </div>
+            <div className="sorting">
+                <div>
+                    <div>Time</div>
+                    <div>{(
+                        props.settingsState.startSorting && props.settingsState.endSorting && props.settingsState.runSorting ? durationBetween(props.settingsState.startSorting, props.settingsState.endSorting) : 0
+                    )}</div>
+                </div>
+            </div>
+            <div className="sorting">
+                <div>
+                    <div>Size</div>
+                    <div>{props.dataVisualState.length}</div>
+                </div>
+                
             </div>
             <Button 
                 disabled={props.settingsState.runSorting}

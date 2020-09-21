@@ -40,6 +40,7 @@ export const sortingDataVisual = () => {
         let newData = [...dataVisualState]
         let speed = settingsState.speed * 10
         dispatch(settingsStateAction.setRunSorting(true))
+        dispatch(settingsStateAction.setStartSorting(new Date()))
         switch(selectedSortItem && selectedSortItem.name) {
             case SORT_TYPE.BUBLE_SORT:
                 interval1 = setInterval(() => {
@@ -55,6 +56,7 @@ export const sortingDataVisual = () => {
                     if (index2 >= length) {
                         clearInterval(interval1)
                         dispatch(settingsStateAction.setRunSorting(false))
+                        dispatch(settingsStateAction.setEndSorting(new Date()))
                     }
                 }, speed)
             default:

@@ -1,5 +1,9 @@
 import ActionEnums from "../../enums/ActionEnums";
 
+export const setEndSorting = (endSorting) => ({
+    type: ActionEnums.SETTINGS_STATE_SET_END_SORTING, endSorting
+})
+
 export const setIndexSort = (indexSort) => ({
     type: ActionEnums.SETTINGS_STATE_SET_INDEX_SORT, indexSort
 })
@@ -18,4 +22,8 @@ export const setMaxValue = (maxValue) => ({
 
 export const setRunSorting = (runSorting) => ({
     type: ActionEnums.SETTINGS_STATE_SET_RUN_SORTING, runSorting
+})
+
+export const setStartSorting = (startSorting) => ({
+    type: ActionEnums.SETTINGS_STATE_SET_START_SORTING, startSorting
 })
