@@ -1,13 +1,14 @@
 import ActionEnums from '../../enums/ActionEnums'
 
 const init = {
-    speed: 1,
+    endSorting: null,
     indexSort: 0,
-    maxArray: 100,
+    maxArray: 10,
     maxValue: 100,
     runSorting: false,
+    speed: 1,
     startSorting: null,
-    endSorting: null,
+    swapping: false,
 }
 
 const settingsState = (state = init, action) => {
@@ -39,6 +40,10 @@ const settingsState = (state = init, action) => {
         case ActionEnums.SETTINGS_STATE_SET_START_SORTING:
             return Object.assign({}, state, {
                 startSorting: action.startSorting
+            })
+        case ActionEnums.SETTINGS_STATE_SET_SWAPPING:
+            return Object.assign({}, state, {
+                swapping: action.swapping
             })
         default: 
             return state

@@ -7,8 +7,9 @@ import { bindActionCreators } from 'redux'
 const mapStateToProps = (state) => {
     return {
         dataVisualState: state.dataVisualState,
-        runSorting: state.settingsState.runSorting,
         indexSort: state.settingsState.indexSort,
+        runSorting: state.settingsState.runSorting,
+        swapping: state.settingsState.swapping,
     }
 }
 
@@ -24,6 +25,17 @@ const SortPageContent = (props) => {
         dataVisualBusinessAction.generateDataVisual()
     }, [])
 
+    const sortingWhenRunning = (index) => {
+        return (props.runSorting && (props.indexSort === index || (props.indexSort + 1) === index) ? "active" : '')
+    }
+
+    const swappingWhenRunning = (index) => {
+        if (props.swapping)
+            return (props.runSorting && (props.indexSort + (props.swapping - 1) === index) ? "swapping" : '')
+        else 
+            return ''
+    }
+
     return (
         <div className="sort-content">
             <div className="item-content">
@@ -31,7 +43,7 @@ const SortPageContent = (props) => {
                     return (
                         <div 
                             key={`${index}-item-${item}`} 
-                            className={`item ${(props.runSorting && props.indexSort === index ? "active" : '')}`} 
+                            className={`item ${sortingWhenRunning(index)} ${swappingWhenRunning(index)}`} 
                             style={{height: `${(item * 2)}px`}}>
                         </div>
                     )

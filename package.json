@@ -1,5 +1,5 @@
 {
-  "name": "Sorting visual",
+  "name": "SortingVisual",
   "version": "1.0.0",
   "description": "",
   "main": "public/electron.js",

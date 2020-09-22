@@ -27,3 +27,7 @@ export const setRunSorting = (runSorting) => ({
 export const setStartSorting = (startSorting) => ({
     type: ActionEnums.SETTINGS_STATE_SET_START_SORTING, startSorting
 })
+
+export const setSwapping = (swapping) => ({
+    type: ActionEnums.SETTINGS_STATE_SET_SWAPPING, swapping
+})
