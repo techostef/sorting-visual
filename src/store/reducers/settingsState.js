@@ -3,6 +3,7 @@ import ActionEnums from '../../enums/ActionEnums'
 const init = {
     endSorting: null,
     indexSort: 0,
+    indexCompare: 0,
     maxArray: 10,
     maxValue: 100,
     runSorting: false,
@@ -20,6 +21,10 @@ const settingsState = (state = init, action) => {
         case ActionEnums.SETTINGS_STATE_SET_INDEX_SORT:
             return Object.assign({}, state, {
                 indexSort: parseInt(action.indexSort)
+            })
+        case ActionEnums.SETTINGS_STATE_SET_INDEX_COMPARE:
+            return Object.assign({}, state, {
+                indexCompare: parseInt(action.indexCompare)
             })
         case ActionEnums.SETTINGS_STATE_SET_SPEED:
             return Object.assign({}, state, {

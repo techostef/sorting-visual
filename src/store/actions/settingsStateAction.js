@@ -8,6 +8,10 @@ export const setIndexSort = (indexSort) => ({
     type: ActionEnums.SETTINGS_STATE_SET_INDEX_SORT, indexSort
 })
 
+export const setIndexCompare = (indexCompare) => ({
+    type: ActionEnums.SETTINGS_STATE_SET_INDEX_COMPARE, indexCompare
+})
+
 export const setSpeed = (speed) => ({
     type: ActionEnums.SETTINGS_STATE_SET_SPEED, speed
 })
