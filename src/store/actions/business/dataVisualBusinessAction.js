@@ -74,83 +74,99 @@ const sortingDataBubleSort = (speed) => {
     }
 }
 
-const sortQuickSortByStep = (newData, pivot, j, i, length, log = false) => {
-    return (dispatch, getState) => {
-        let temp
-        if (!length) length = pivot
-        console.log("length", length, j, pivot)
-        if (pivot - j === length && newData[pivot] < newData[j]) {
-            temp = newData[j]
-            newData[j] = newData[pivot]
-            newData[pivot] = temp
-        }
-        else if (j === pivot && newData[pivot] > newData[i]) {
-            i++
-            temp = newData[i]
-            newData[i] = newData[pivot]
-            newData[pivot] = temp
-           
-            i--
-        }
-        else if (newData[j] < newData[pivot]) {
-            i++
-            if (newData[i]) {
-                temp = newData[j]
-                newData[j] = newData[i]
-                newData[i] = temp
-            }
-        }
-        j ++;
-
-        return {
-            newData: newData,
-            i: i,
-            j: j,
-        }
-    }
-}
-
-const recursiveQuickSort = (newData, pivot, start = 0) => {
+const recursiveQuickSort = (newData, speed, pivot, start = 0) => {
     return (dispatch, getState) => {
         if (start > pivot) return false
         let i = start - 1;
         let j = start;
         let length = newData.length - 1
         let temp
+        let swapping = false
         if (!pivot) pivot = length
-        while(j <= pivot) {
-            if (j === start && newData[pivot] <= newData[j]) {
-                i++
-                temp = newData[j]
-                newData[j] = newData[pivot]
-                newData[pivot] = temp
-            }
-            else if (j === pivot && newData[pivot] >= newData[i]) {
-                i++
-                temp = newData[i]
-                newData[i] = newData[pivot]
-                newData[pivot] = temp
-            
-                i--
-            }
-            else if (newData[j] <= newData[pivot]) {
-                i++
-                if (newData[i]) {
+        dispatch(settingsStateAction.setIndexCompare(pivot))
+        let once = true
+        let changeIndex = 0
+        let changeIndexCompare = 0
+        let interval = setInterval(() => {
+            if (swapping >= 1) {
+                // dispatch(settingsStateAction.setIndexCompare(i))
+                if (swapping === 1) {
+                    dispatch(settingsStateAction.setIndexCompare(changeIndex))
+                    console.log("swapping1")
+                    swapping = 2
+                } else if (swapping === 2) {
+                    dispatch(settingsStateAction.setSwapping(changeIndex))
+                    dispatch(settingsStateAction.setIndexSort(changeIndexCompare))
+                    console.log("swapping2")
+                    swapping = 3
+                } else if (swapping === 3) {
+                    dispatch(dataVisualStateAction.restoreData([...newData]))
+                    dispatch(settingsStateAction.setSwapping(changeIndexCompare))
+                    dispatch(settingsStateAction.setIndexSort(changeIndex))
+                    console.log("swapping3")
+                    swapping = 4
+                } else if (swapping === 4) {
+                    dispatch(settingsStateAction.setSwapping(-1))
+                    console.log("swapping4")
+                    swapping = 5
+                } else {
+                    dispatch(settingsStateAction.setIndexCompare(pivot))
+                    console.log("swappingElse")
+                    swapping = false
+                    j++;
+                }
+                
+            } else {
+                swapping = false
+                dispatch(settingsStateAction.setIndexSort(j))
+                if (j === start && newData[pivot] <= newData[j]) {
+                    i++
+                    temp = newData[j]
+                    newData[j] = newData[pivot]
+                    newData[pivot] = temp
+                    swapping = 1
+                    changeIndex = pivot
+                    changeIndexCompare = j
+                }
+                else if (j === pivot && newData[pivot] >= newData[i]) {
+                    i++
+                    temp = newData[i]
+                    newData[i] = newData[pivot]
+                    newData[pivot] = temp
+                    i--
+                    swapping = 1
+                    changeIndex = i + 1
+                    changeIndexCompare = pivot
+                }
+                else if (newData[j] <= newData[pivot]) {
+                    i++
                     temp = newData[j]
                     newData[j] = newData[i]
                     newData[i] = temp
+                    changeIndex = i
+                    changeIndexCompare = j
+
+                    if (j != i)
+                    swapping = 1
+                }
+                
+                if (!swapping && j < pivot) {
+                    j++
+                }
+                console.log("interval")
+            }
+            
+            if (j > pivot && once) {
+                clearInterval(interval)
+                once = false
+                if ((i - start) >= 1) 
+                    dispatch(recursiveQuickSort(newData, speed, i === (start - 1) ? parseInt(pivot / 2) : i, 0))
+                if ((pivot - i) >= 1) {
+                    const nextI = i === (start) ? start + 1 : i
+                    dispatch(recursiveQuickSort(newData, speed, pivot, nextI))
                 }
             }
-            j ++;
-        }
-       
-        if ((i - start) >= 1) 
-            dispatch(recursiveQuickSort(newData, i === (start - 1) ? parseInt(pivot / 2) : i, 0))
-        if ((pivot - i) >= 1) {
-            const nextI = i === (start) ? start + 1 : i
-            dispatch(recursiveQuickSort(newData, pivot, nextI))
-        }
-            
+        }, speed)
     }
 }
 
@@ -158,20 +174,9 @@ const sortingDataQuickSort = (speed) => {
     return (dispatch, getState) => {
         const state = getState()
         const { dataVisualState } = state
-        let length = dataVisualState.length
         let newData = dataVisualState.filter((item) => Object.assign({}, item))
-        let i = -1, i1, i2
-        let j = 0, j1, j2
-        let pivot = length - 1, pivot1, pivot2
-        let temp
-        let interval1
-        let sorted
-        let swapping = false
-        let index = 0;
-        let maxIndex = 3;
-        dispatch(recursiveQuickSort(newData))
-        dispatch(dataVisualStateAction.restoreData(newData))
-        
+        dispatch(recursiveQuickSort(newData, speed))
+        // dispatch(settingsStateAction.setRunSorting(false))
     }
 }
 
@@ -188,7 +193,6 @@ export const sortingDataVisual = () => {
             dispatch(sortingDataBubleSort(speed))
         } else if (type === SORT_TYPE.QUICK_SORT) {
             dispatch(sortingDataQuickSort(speed))
-            dispatch(settingsStateAction.setRunSorting(false))
         }
 
     }

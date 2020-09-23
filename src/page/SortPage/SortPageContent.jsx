@@ -46,9 +46,9 @@ const SortPageContent = (props) => {
             else 
                 return ''
         else if (selectedSortItem.name === SORT_TYPE.QUICK_SORT)
-            // if (props.swapping >= 0) 
-            //     return (props.runSorting && (props.swapping === index) ? "swapping" : '')
-            // else 
+            if (props.swapping >= 0) 
+                return (props.runSorting && (props.swapping === index) ? "swapping" : '')
+            else 
                 return ''
         else
             return ''
@@ -63,6 +63,7 @@ const SortPageContent = (props) => {
                             key={`${index}-item-${item}`} 
                             className={`item ${sortingWhenRunning(index)} ${swappingWhenRunning(index)}`} 
                             style={{height: `${(item * 2)}px`}}>
+                                {item}
                         </div>
                     )
                 })}
