@@ -4,12 +4,12 @@ import { SORT_TYPE } from '../../enums/DataEnums'
 const init = [
     {
         Id: 1,
-        isSelected: false,
+        isSelected: true,
         name: SORT_TYPE.BUBLE_SORT,
     },
     {
         Id: 2,
-        isSelected: true,
+        isSelected: false,
         name: SORT_TYPE.QUICK_SORT,
     },
     {

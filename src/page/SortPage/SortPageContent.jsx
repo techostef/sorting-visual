@@ -34,7 +34,8 @@ const SortPageContent = (props) => {
         if (selectedSortItem.name === SORT_TYPE.BUBLE_SORT)
             return (props.runSorting && (props.indexSort === index || (props.indexSort + 1) === index) ? "active" : '')
         else if (selectedSortItem.name === SORT_TYPE.QUICK_SORT)
-            return (props.runSorting && (props.indexSort === index || (props.indexCompare) === index) ? "active" : '')
+            // return (props.runSorting && (props.indexSort === index || (props.indexCompare) === index) ? "active" : '')
+            return ''
         else
             return ''
     }
@@ -60,10 +61,11 @@ const SortPageContent = (props) => {
                 {props.dataVisualState.map((item, index) => {
                     return (
                         <div 
-                            key={`${index}-item-${item}`} 
+                            key={`${index}-item-${item}`}
+                            id={`#sort-item-${index}`} 
                             className={`item ${sortingWhenRunning(index)} ${swappingWhenRunning(index)}`} 
                             style={{height: `${(item * 2)}px`}}>
-                                {item}
+                                {/* {item} */}
                         </div>
                     )
                 })}

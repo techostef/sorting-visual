@@ -5,7 +5,7 @@ const init = {
     indexSort: 0,
     indexCompare: 0,
     maxArray: 10,
-    maxValue: 100,
+    maxValue: 250,
     runSorting: false,
     speed: 1,
     startSorting: null,

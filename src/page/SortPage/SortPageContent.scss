@@ -14,12 +14,11 @@
             border: 1px solid rgb(8, 126, 87);
             border-top: unset;
             &.active {
-                background-color: rgb(226, 226, 40) !important;
+                background-color: rgba(231, 247, 82, 0.973) !important;
             }
             &.swapping {
                 background-color: rgb(128, 15, 15) !important;
             }
         }
     }
-    
 }

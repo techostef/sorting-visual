@@ -77,7 +77,7 @@ const SortPageHeader = (props) => {
                     type="range" id="speed" 
                     name="speed"
                     min="1" 
-                    max="100"
+                    max="200"
                     value={props.settingsState.speed}
                     onChange={handleSpeedSorting}
                 />
