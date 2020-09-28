@@ -61,13 +61,9 @@ const sortingDataBubleSort = (speed) => {
         let sorted
         let swapping = false
         let swappingIndex = 0
-        let activeFunc = (index) => dispatch(settingsStateAction.addIndexSort(index))
-        let removeFunc = (index) => dispatch(settingsStateAction.removeIndexSort(index))
-        let controlIndex = controlIndexNew(0, activeFunc, removeFunc)
-        let controlIndexCompare = controlIndexNew(-1, activeFunc, removeFunc)
-        let activeSwappingFunc = (index) => dispatch(settingsStateAction.addSwapping(index))
-        let removeSwappingFunc = (index) => dispatch(settingsStateAction.removeSwapping(index))
-        let controlIndexSwap = controlIndexNew(-1, activeSwappingFunc, removeSwappingFunc)
+        let controlIndex = controlClassNameSort('active', 0)
+        let controlIndexCompare = controlClassNameSort('active', -1)
+        let controlIndexSwap = controlClassNameSort('swapping', -1)
         interval1 = setInterval(() => {
             if (swapping >= 1) {
                 if (swapping === 1) {
@@ -171,6 +167,7 @@ const recursiveQuickSortA = (newData, pivot, start = 0) => {
     }
 }
 
+
 const setActiveClassName = (index, oldIndex, classNameTarget) => {
     let selector = document.getElementsByClassName('item')
     let className = ''
@@ -198,7 +195,49 @@ const deactiveClassName = (className, selector, classNameTarget) => {
     selector.className = newClassName
 }
 
-const recursiveQuickSort = (newData, speed, pivot, start = 0) => {
+const controlClassNameSort = (classNameTarget, newIndex, activeFuncNew = () => {}, removeFuncNew = () => {}) => {
+    let index, oldIndex
+
+    let activeFunc = activeFuncNew
+    let removeFunc = removeFuncNew
+    
+    const setDeactive = (indexDeactive) => {
+        let selector = document.getElementsByClassName('item')
+        let className = ''
+        if (indexDeactive === -1) indexDeactive = index
+        for(let i = 0; i < selector.length; i++) {
+            if (selector[i])
+            className = selector[i].className
+            if (i === indexDeactive) {
+                deactiveClassName(className, selector[i], classNameTarget)
+            }
+        }
+        removeFunc(indexDeactive)
+    }
+
+    const setActive = (newIndex) => {
+        if (newIndex === index) return false
+        oldIndex = index
+        index = newIndex
+        if (index >= 0) {
+            setActiveClassName(index, oldIndex, classNameTarget)
+            activeFunc(index)
+        }
+        if (oldIndex >= 0)
+        setDeactive(oldIndex)
+    }
+
+    setActive(newIndex)
+    
+    return {
+        setIndex: (newIndex) => {
+            setActive(newIndex)
+        },
+        setDeactive
+    }
+}
+
+const recursiveQuickSort = (objectIndexSort, newData, speed, pivot, start = 0) => {
     return (dispatch, getState) => {
         if (start > pivot) return false
         let i = start - 1;
@@ -208,13 +247,15 @@ const recursiveQuickSort = (newData, speed, pivot, start = 0) => {
         let swapping = false
         if (!pivot) pivot = length
         if (checkIsSorted(newData, start, pivot)) return false
-        let activeFunc = (index) => dispatch(settingsStateAction.addIndexSort(index))
-        let removeFunc = (index) => dispatch(settingsStateAction.removeIndexSort(index))
-        let activeSwappingFunc = (index) => dispatch(settingsStateAction.addSwapping(index))
-        let removeSwappingFunc = (index) => dispatch(settingsStateAction.removeSwapping(index))
-        let controlIndex = controlIndexNew(-1, activeFunc, removeFunc)
-        let controlIndexCompare = controlIndexNew(pivot, activeFunc, removeFunc)
-        let controlSwapping = controlIndexNew(-1, activeSwappingFunc, removeSwappingFunc)
+        let activeFunc = () => {
+            objectIndexSort.lengthIndex += 1
+        }
+        let removeFunc = () => {
+            objectIndexSort.lengthIndex -= 1
+        }
+        let controlIndex = controlClassNameSort('active', -1, activeFunc, removeFunc)
+        let controlIndexCompare = controlClassNameSort('active', pivot)
+        let controlSwapping = controlClassNameSort('swapping')
         let once = true
         let changeIndex = 0
         let changeIndexCompare = 0
@@ -289,11 +330,17 @@ const recursiveQuickSort = (newData, speed, pivot, start = 0) => {
                 controlSwapping.setIndex(-1)
                 if ((i - start) >= 1) 
                     nextI = i === (start - 1) ? parseInt(pivot / 2) : i
-                    dispatch(recursiveQuickSort(newData, speed, nextI, 0))
+                    dispatch(recursiveQuickSort(objectIndexSort, newData, speed, nextI, 0))
                 if ((pivot - i) >= 1) {
                     nextI = i === (start) ? start + 1 : i
-                    dispatch(recursiveQuickSort(newData, speed, pivot, nextI))
+                    dispatch(recursiveQuickSort(objectIndexSort, newData, speed, pivot, nextI))
                 }
+                if (objectIndexSort.lengthIndex === 0) {
+                    dispatch(settingsStateAction.setRunSorting(false))
+                    dispatch(settingsStateAction.setEndSorting(new Date()))
+                }
+                else 
+                    dispatch(settingsStateAction.setRunSorting(true))
             }
         }, speed)
     }
@@ -305,11 +352,93 @@ const sortingDataQuickSort = (speed) => {
         const state = getState()
         const { dataVisualState } = state
         let newData = dataVisualState.filter((item) => Object.assign({}, item))
+        let objectIndexSort = {
+            lengthIndex: 0
+        }
         if (checkIsSorted(newData, 0, newData.length - 1)) {
             dispatch(settingsStateAction.setEndSorting(new Date()))
         } else {
-            dispatch(recursiveQuickSort(newData, speed))
+            dispatch(recursiveQuickSort(objectIndexSort, newData, speed, ))
         }
+    }
+}
+
+const sortingDataInsertionSort = (speed) => {
+    return (dispatch, getState) => {
+        const state = getState()
+        const { dataVisualState } = state
+        let newData = dataVisualState.filter((item) => Object.assign({}, item))
+        let temp
+        let checkLoop
+        let controlIndex = controlClassNameSort("active", 0)
+        let controlIndexCompare = controlClassNameSort("active", -1)
+        let controlSwapping = controlClassNameSort("swapping", -1)
+        let swap = false
+        let j
+        let i = 0
+        let interval
+        let changeIndex
+        let swappingJ = false
+        interval = setInterval(() => {
+            if (swap) {
+                if (swap === 1) {
+                    swap = 2
+                    controlIndexCompare.setIndex(changeIndex + 1)
+                } else if (swap === 2) {
+                    swap = 3
+                    controlSwapping.setIndex(changeIndex)
+                } else if (swap === 3) {
+                    swap = 4
+                    controlSwapping.setIndex(changeIndex + 1)
+                    if (swappingJ) {
+                        if (newData[j] && newData[j] > newData[j + 1]) {
+                            temp = newData[j]
+                            newData[j] = newData[j + 1]
+                            newData[j + 1] = temp
+                            j --
+                        }
+                    }
+                    dispatch(dataVisualStateAction.restoreData([...newData]))
+                } else if (swap === 4) {
+                    swap = 5
+                    controlSwapping.setIndex(-1)
+                } else if (swap === 6) {
+                    swap = 1
+                    controlIndex.setIndex(j)
+                } else {
+                    controlIndexCompare.setIndex(-1)
+                    if (newData[j] && newData[j] > newData[j + 1]) {
+                      
+                        changeIndex = j
+                        swap = 6
+                        swappingJ = true
+                    } else {
+                        swappingJ = false
+                        swap = false
+                        j = -1
+                    }
+                }
+            } else {
+                controlIndex.setIndex(i)
+                if (newData[i] > newData[i + 1]) {
+                    temp = newData[i]
+                    newData[i] = newData[i + 1]
+                    newData[i + 1] = temp
+                    checkLoop = true
+                    j = i - 1
+                    swap = 1
+                    changeIndex = i
+                }
+                i ++
+                if (i >= newData.length) {
+                    clearInterval(interval)
+                    controlIndex.setIndex(-1)
+                    dispatch(settingsStateAction.setRunSorting(false))
+                    dispatch(settingsStateAction.setEndSorting(new Date()))
+                }
+            }
+            
+        }, speed)
     }
 }
 
@@ -326,6 +455,8 @@ export const sortingDataVisual = () => {
             dispatch(sortingDataBubleSort(speed))
         } else if (type === SORT_TYPE.QUICK_SORT) {
             dispatch(sortingDataQuickSort(speed))
+        } else if (type === SORT_TYPE.INSERT_SORT) {
+            dispatch(sortingDataInsertionSort(speed))
         }
 
     }

@@ -29,23 +29,15 @@ const SortPageContent = (props) => {
         // dataVisualBusinessAction.generateDataVisual()
     }, [])
 
-    useEffect(() => {
-        const { settingsStateAction } = props
-        if (props.lengthIndexSort === 0) {
-            settingsStateAction.setRunSorting(false)
-            settingsStateAction.setEndSorting(new Date())
-        } else {
-            settingsStateAction.setRunSorting(true)
-        }
-    }, [props.indexSort])
-
-    const sortingWhenRunning = (index) => {
-        return (props.indexSort[index] >= 0 ? "active" : '')
-    }
-
-    const swappingWhenRunning = (index) => {
-        return (props.swapping[index] >= 0 ? "swapping" : '')
-    }
+    // useEffect(() => {
+    //     const { settingsStateAction } = props
+    //     if (props.lengthIndexSort === 0) {
+    //         settingsStateAction.setRunSorting(false)
+    //         settingsStateAction.setEndSorting(new Date())
+    //     } else {
+    //         settingsStateAction.setRunSorting(true)
+    //     }
+    // }, [props.indexSort])
 
     return (
         <div className="sort-content">
@@ -56,8 +48,8 @@ const SortPageContent = (props) => {
                             key={`${index}-item-${props.item}`}
                             index={index}
                             item={item}
-                            sortingWhenRunning={sortingWhenRunning(index)}
-                            swappingWhenRunning={swappingWhenRunning(index)}
+                            sortingWhenRunning={''}
+                            swappingWhenRunning={''}
                         />
                     )
                 })}
