@@ -9,6 +9,7 @@ import * as sortBusinessAction from "../../store/actions/business/sortBusinessAc
 import { bindActionCreators } from "redux"
 import InputDropDown from "../../components/inputs/InputDropDown"
 import { durationBetween } from "../../helper/dateHelper"
+import InputRange from "../../components/inputs/InputRange"
 
 const mapStateToProps = (state) => {
     return {
@@ -61,28 +62,20 @@ const SortPageHeader = (props) => {
                 onClick={handleGenerateArray}>
                Generate Array
             </Button>
-            <div className="range-array">
-                <input 
-                    type="range" id="volume" 
-                    name="volume"
-                    min="5" 
-                    max="500"
-                    value={props.settingsState.maxArray}
-                    onChange={handleSettingsMaxArray}
-                />
-                <label htmlFor="volume">Range Array</label>
-            </div>
-            <div className="range-array">
-                <input 
-                    type="range" id="speed" 
-                    name="speed"
-                    min="1" 
-                    max="200"
-                    value={props.settingsState.speed}
-                    onChange={handleSpeedSorting}
-                />
-                <label htmlFor="volume">Speed Sorting</label>
-            </div>
+            <InputRange 
+                min={5}
+                max={500}
+                value={props.settingsState.maxArray}
+                onChange={handleSettingsMaxArray}
+                label={'Range Array'}
+            />
+            <InputRange 
+                min={1}
+                max={200}
+                value={props.settingsState.speed}
+                onChange={handleSpeedSorting}
+                label={'Speed Sorting'}
+            />
             <div className="sorting">
                 <InputDropDown 
                     options={props.sortState}
@@ -94,7 +87,7 @@ const SortPageHeader = (props) => {
                 <div>
                     <div>Time</div>
                     <div>{(
-                        props.settingsState.startSorting && props.settingsState.endSorting && props.settingsState.runSorting ? durationBetween(props.settingsState.startSorting, props.settingsState.endSorting) : 0
+                        props.settingsState.startSorting && props.settingsState.endSorting ? durationBetween(props.settingsState.startSorting, props.settingsState.endSorting) : 0
                     )}</div>
                 </div>
             </div>

@@ -8,6 +8,22 @@ export const setIndexSort = (indexSort) => ({
     type: ActionEnums.SETTINGS_STATE_SET_INDEX_SORT, indexSort
 })
 
+export const addIndexSort = (indexSort) => ({
+    type: ActionEnums.SETTINGS_STATE_ADD_INDEX_SORT, indexSort
+})
+
+export const removeIndexSort = (indexSort) => ({
+    type: ActionEnums.SETTINGS_STATE_REMOVE_INDEX_SORT, indexSort
+})
+
+export const addSwapping = (swapping) => ({
+    type: ActionEnums.SETTINGS_STATE_ADD_SWAPPING, swapping
+})
+
+export const removeSwapping = (swapping) => ({
+    type: ActionEnums.SETTINGS_STATE_REMOVE_SWAPPING, swapping
+})
+
 export const setIndexCompare = (indexCompare) => ({
     type: ActionEnums.SETTINGS_STATE_SET_INDEX_COMPARE, indexCompare
 })
