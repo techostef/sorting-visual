@@ -1,27 +1,31 @@
 import ActionEnums from "../../enums/ActionEnums";
 
-export const setEndSorting = (endSorting) => ({
-    type: ActionEnums.SETTINGS_STATE_SET_END_SORTING, endSorting
-})
-
-export const setIndexSort = (indexSort) => ({
-    type: ActionEnums.SETTINGS_STATE_SET_INDEX_SORT, indexSort
-})
-
 export const addIndexSort = (indexSort) => ({
     type: ActionEnums.SETTINGS_STATE_ADD_INDEX_SORT, indexSort
-})
-
-export const removeIndexSort = (indexSort) => ({
-    type: ActionEnums.SETTINGS_STATE_REMOVE_INDEX_SORT, indexSort
 })
 
 export const addSwapping = (swapping) => ({
     type: ActionEnums.SETTINGS_STATE_ADD_SWAPPING, swapping
 })
 
+export const removeIndexSort = (indexSort) => ({
+    type: ActionEnums.SETTINGS_STATE_REMOVE_INDEX_SORT, indexSort
+})
+
 export const removeSwapping = (swapping) => ({
     type: ActionEnums.SETTINGS_STATE_REMOVE_SWAPPING, swapping
+})
+
+export const setDataSorted = (dataSorted) => ({
+    type: ActionEnums.SETTINGS_STATE_SET_DATA_SORTED, dataSorted
+})
+
+export const setEndSorting = (endSorting) => ({
+    type: ActionEnums.SETTINGS_STATE_SET_END_SORTING, endSorting
+})
+
+export const setIndexSort = (indexSort) => ({
+    type: ActionEnums.SETTINGS_STATE_SET_INDEX_SORT, indexSort
 })
 
 export const setIndexCompare = (indexCompare) => ({

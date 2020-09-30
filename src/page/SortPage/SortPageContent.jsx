@@ -9,6 +9,8 @@ import SortPageItemSort from "./SortPageItemSort"
 const mapStateToProps = (state) => {
     return {
         dataVisualState: state.dataVisualState,
+        dataVisualSortedState: state.dataVisualSortedState,
+        dataSorted: state.settingsState.dataSorted,
         indexSort: state.settingsState.indexSort,
         lengthIndexSort: state.settingsState.lengthIndexSort,
         runSorting: state.settingsState.runSorting,
@@ -39,6 +41,11 @@ const SortPageContent = (props) => {
     //     }
     // }, [props.indexSort])
 
+    const checkSortedItem = (item, index) => {
+        const { dataVisualState, dataVisualSortedState, dataSorted } = props
+        return (dataVisualSortedState[index] && dataVisualSortedState[index] === item && dataSorted) ? "sorted" : ''
+    }
+
     return (
         <div className="sort-content">
             <div className="item-content">
@@ -48,6 +55,7 @@ const SortPageContent = (props) => {
                             key={`${index}-item-${props.item}`}
                             index={index}
                             item={item}
+                            sorted={checkSortedItem(item, index)}
                             sortingWhenRunning={''}
                             swappingWhenRunning={''}
                         />

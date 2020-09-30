@@ -35,8 +35,9 @@ const SortPageHeader = (props) => {
     }
 
     const handleSettingsMaxArray = (e) => {
-        const { settingsStateAction } = props
+        const { dataVisualBusinessAction, settingsStateAction } = props
         settingsStateAction.setMaxArray(parseInt(e.target.value))
+        dataVisualBusinessAction.generateDataVisual()
     }
 
     const handleSortChange = (item) => {

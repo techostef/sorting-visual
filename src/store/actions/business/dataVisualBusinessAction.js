@@ -1,5 +1,6 @@
 import { SORT_TYPE } from "../../../enums/DataEnums"
 import * as dataVisualStateAction from "../dataVisualStateAction"
+import * as dataVisualSortedStateAction from "../dataVisualSortedStateAction"
 import * as settingsStateAction from "../settingsStateAction"
 
 export const generateDataVisual = () => {
@@ -13,6 +14,8 @@ export const generateDataVisual = () => {
         }
 
         dispatch(dataVisualStateAction.restoreData(data))
+        dispatch(dataVisualSortedStateAction.restoreData(data))
+        dispatch(settingsStateAction.setDataSorted(false))
     }
 }
 
@@ -442,6 +445,27 @@ const sortingDataInsertionSort = (speed) => {
     }
 }
 
+const getPathMergeSort = (arr, newData, start, end, loop = 0) => {
+    return (dispatch, getState) => {
+        if (!start) start = 0
+        if (!end) end = newData.length - 1
+        const gap = end - start
+        if (!arr[loop]) {
+            arr[loop] = []
+        }
+        arr[loop].push({
+            start,
+            end,
+        })
+
+        if (gap > 1) {
+            let middle = parseInt(gap / 2)
+            dispatch(getPathMergeSort(arr, newData, start, middle + start, loop + 1))
+            dispatch(getPathMergeSort(arr, newData, (middle + 1) + start, end, loop + 1))
+        }
+    }
+}
+
 const recursiveMergeSort1 = (arr, newData, start, end, position = 'main', loop = 0, parentStart, parentEnd) => {
     return (dispatch, getState) => {
         if (!start) start = 0
@@ -455,42 +479,166 @@ const recursiveMergeSort1 = (arr, newData, start, end, position = 'main', loop =
             start,
             end,
         })
+        
+        let swapping = -1
+
+        let interval
+        let controlIndex = controlClassNameSort("active", -1)
+        let controlIndexCompare = controlClassNameSort("active", -1)
+        let controlSwapping = controlClassNameSort("swapping", -1)
+
+        const funcFinish = () => {
+            dispatch(recursiveMergeSort2(arr, [...newData]))
+        }
 
         if (gap > 1) {
             let middle = parseInt(gap / 2)
             dispatch(recursiveMergeSort1(arr, newData, start, middle + start, 'left', loop + 1, start, end))
             dispatch(recursiveMergeSort1(arr, newData, (middle + 1) + start, end, 'right', loop + 1, start, end))
         } else if (gap === 1) {
-            if (newData[start] > newData[end]) {
-                temp = newData[start]
-                newData[start] = newData[end]
-                newData[end] = temp
-                dispatch(dataVisualStateAction.restoreData([...newData]))
-            }
-            if (start === arr[0][0].end - 1 && end === arr[0][0].end) {
-                dispatch(recursiveMergeSort2(arr, [...newData]))
-            }
+            interval = setInterval(() => {
+                if (swapping >= 0) {
+                    // console.log("swapping", start, end)
+                    if (swapping === 1) {
+                        controlSwapping.setIndex(start)
+                        swapping = 2
+                    } else if (swapping === 2) {
+                        controlSwapping.setIndex(end)
+                        dispatch(dataVisualStateAction.restoreData([...newData]))
+                        swapping = 3
+                    } else if (swapping === 3) {
+                        controlSwapping.setIndex(-1)
+                        swapping = 4
+                    } else {
+                        controlIndex.setIndex(-1)
+                        controlIndexCompare.setIndex(-1)
+                        swapping = -1
+                        clearInterval(interval)
+                        if (start === arr[0][0].end - 1 && end === arr[0][0].end) {
+                            funcFinish()
+                        }
+                    }
+                } else {
+                    if (newData[start] > newData[end]) {
+                        temp = newData[start]
+                        newData[start] = newData[end]
+                        newData[end] = temp
+                        swapping = 1
+                        controlIndex.setIndex(start)
+                        controlIndexCompare.setIndex(end)
+                    } else {
+                        clearInterval(interval)
+                        if (start === arr[0][0].end - 1 && end === arr[0][0].end) {
+                            funcFinish()
+                        }
+                    }
+                    
+                }
+            }, 1000)
         } else if (gap === 0) {
             if (start === arr[0][0].end && end === arr[0][0].end) {
-                dispatch(recursiveMergeSort2(arr, [...newData]))
+                funcFinish()
             }
         }
     }
 }
 
-const recursiveMergeSort2 = (arr, newData, loop) => {
+const recursiveMergeSort2 = (speed, arr, newData, loop) => {
     return (dispatch, getState) => {
         if (loop >= 0) {} else loop = arr.length - 1
         if (!arr[loop] || arr[loop].length === 1) {
             dispatch(settingsStateAction.setRunSorting(false))
             return false
         }
-        let s = 0
+        let controlIndex = controlClassNameSort("active", -1)
+        let controlIndexCompare = controlClassNameSort("active", -1)
+        let controlSwapping = controlClassNameSort("swapping", -1)
+        let index, indexCompare
         let i
-        let i1, end1
-        let i2, end2
+        let i1 = -1, end1
+        let i2, end2 = -1
         let newDataTemp = [...newData]
+        let j = 0
+        let swapping = -1
+        // let interval = setInterval(() => {
+        //     if (j >= arr[loop].length) {
+        //         clearInterval(interval)
+        //         dispatch(recursiveMergeSort2(speed, arr, newData, loop - 1))
+        //     } else {
+        //         if (i1 >= 0 && end2 >= 0) {
+        //             if (i < end2) {
+        //                 if (swapping >= 0) {
+        //                     if (swapping === 1) {
+        //                         swapping = 2
+        //                         controlSwapping.setIndex(index)
+        //                     } else if (swapping === 2) {
+        //                         swapping = 3
+        //                         controlSwapping.setIndex(indexCompare)
+        //                         dispatch(dataVisualStateAction.restoreData([...newData]))
+        //                     } else {
+        //                         controlSwapping.setIndex(-1)
+        //                         swapping = -1
+        //                     }
+        //                 } else {
+        //                     if (newDataTemp[i1] >= newDataTemp[i2]) {
+        //                         swapping = 1
+        //                         index = i2
+        //                         indexCompare = i1
+        //                         controlIndex.setIndex(i2)
+        //                         controlIndexCompare.setIndex(i1)
+        //                         newData[i] = newDataTemp[i2]
+        //                         if (i === end2 - 1) {
+        //                             newData[i + 1] = newDataTemp[i1]
+        //                         }
+        //                         i2 ++
+        //                         if (i2 > end2) {
+        //                             i++
+        //                             while(i1 <= end1) {
+        //                                 newData[i] = newDataTemp[i1]
+        //                                 i1++
+        //                                 i++
+        //                             }
+        //                         }
+        //                     } else if (newDataTemp[i2] >= newDataTemp[i1]) {
+        //                         swapping = 1
+        //                         index = i1
+        //                         indexCompare = i2
+        //                         controlIndex.setIndex(i1)
+        //                         controlIndexCompare.setIndex(i2)
+        //                         newData[i] = newDataTemp[i1]
+        //                         if (i === end2 - 1) {
+        //                             newData[i + 1] = newDataTemp[i2]
+        //                         }
+        //                         i1 ++
+        //                         if (i1 > end1) {
+        //                             i++
+        //                             while(i2 <= end2) {
+        //                                 newData[i] = newDataTemp[i2]
+        //                                 i2++
+        //                                 i++
+        //                             }
+        //                         }
+        //                     }
+        //                     i++
+        //                     dispatch(dataVisualStateAction.restoreData([...newData]))
+        //                 }
+        //             } else {
+        //                 j += 2
+        //                 i1 = end2 = -1
+        //             }
+        //         } else {
+        //             i1 = arr[loop][j].start
+        //             end1 = arr[loop][j].end
+        //             i = i1       
+
+        //             i2 = arr[loop][j + 1].start 
+        //             end2 = arr[loop][j + 1].end
+        //             console.log("loop", loop, j, arr)
+        //         }
+        //     }
+        // }, speed)
    
+        // ---------------------------------------------------------
         for(let j = 0; j < arr[loop].length; j += 2) {
             i1 = arr[loop][j].start
             end1 = arr[loop][j].end
@@ -533,7 +681,7 @@ const recursiveMergeSort2 = (arr, newData, loop) => {
             }
             dispatch(dataVisualStateAction.restoreData([...newData]))
         }
-        dispatch(recursiveMergeSort2(arr, newData, loop - 1))
+        dispatch(recursiveMergeSort2(speed, arr, newData, loop - 1))
     }
 }
 
@@ -543,14 +691,53 @@ const sortingDataMergeSort = (speed) => {
         const { dataVisualState } = state
         let newData = dataVisualState.filter((item) => Object.assign({}, item))
         let temp
-        let checkLoop
-        let controlIndex = controlClassNameSort("active", 0)
+        let controlIndex = controlClassNameSort("active", -1)
         let controlIndexCompare = controlClassNameSort("active", -1)
         let controlSwapping = controlClassNameSort("swapping", -1)
         // let arr = [[{"start":0,"end":19}],[{"start":0,"end":9},{"start":10,"end":19}],[{"start":0,"end":4},{"start":5,"end":9},{"start":10,"end":14},{"start":15,"end":19}],[{"start":0,"end":2},{"start":3,"end":4},{"start":5,"end":7},{"start":8,"end":9},{"start":10,"end":12},{"start":13,"end":14},{"start":15,"end":17},{"start":18,"end":19}],[{"start":0,"end":1},{"start":2,"end":2},{"start":5,"end":6},{"start":7,"end":7},{"start":10,"end":11},{"start":12,"end":12},{"start":15,"end":16},{"start":17,"end":17}]]
         // dispatch(recursiveMergeSort2(arr, newData, 4))
         let arr = []
-        dispatch(recursiveMergeSort1(arr, newData))
+        // dispatch(getPathMergeSort(arr, newData))
+        dispatch(getPathMergeSort(arr, newData))
+        let index
+        let indexCompare
+        let swapping = -1
+        let i = 0
+        let loop = arr.length - 1
+        let interval = setInterval(() => {
+            if (i >= arr[loop].length) {
+                clearInterval(interval)
+                controlIndex.setIndex(-1)
+                controlIndexCompare.setIndex(-1)
+                dispatch(recursiveMergeSort2(speed, arr, newData, loop))
+            } else {
+                if (swapping >= 0) {
+                    if (swapping === 1) {
+                        swapping = 2
+                        controlSwapping.setIndex(index)
+                    } else if (swapping === 2) {
+                        swapping = 3
+                        controlSwapping.setIndex(indexCompare)
+                        dispatch(dataVisualStateAction.restoreData([...newData]))
+                    } else {
+                        swapping = -1
+                        controlSwapping.setIndex(-1)
+                    }
+                } else {
+                    index = arr[loop][i].start
+                    indexCompare = arr[loop][i].end
+                    controlIndexCompare.setIndex(indexCompare)
+                    controlIndex.setIndex(index)
+                    if (newData[index] > newData[indexCompare]) {
+                        swapping = 1
+                        temp = newData[index]
+                        newData[index] = newData[indexCompare]
+                        newData[indexCompare] = temp
+                    }
+                    i ++
+                }
+            }
+        }, speed)
 
     }
 }
@@ -558,11 +745,15 @@ const sortingDataMergeSort = (speed) => {
 export const sortingDataVisual = () => {
     return (dispatch, getState) => {
         const state = getState()
-        const { settingsState, sortState } = state
+        const { dataVisualSortedState, settingsState, sortState } = state
         const selectedSortItem = sortState.find((item) => item.isSelected)
         let speed = settingsState.speed * 10
         dispatch(settingsStateAction.setRunSorting(true))
         dispatch(settingsStateAction.setStartSorting(new Date()))
+        let newDataSorted = [...dataVisualSortedState]
+        dispatch(recursiveQuickSortA(newDataSorted))
+        dispatch(dataVisualSortedStateAction.restoreData(newDataSorted))
+        dispatch(settingsStateAction.setDataSorted(true))
         const type = selectedSortItem && selectedSortItem.name
         if (type === SORT_TYPE.BUBLE_SORT) {
             dispatch(sortingDataBubleSort(speed))

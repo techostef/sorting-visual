@@ -19,6 +19,9 @@
             &.swapping {
                 background-color: rgb(128, 15, 15) !important;
             }
+            &.sorted {
+                background-color: rgba(178, 13, 228, 0.973) !important;
+            }
         }
     }
 }

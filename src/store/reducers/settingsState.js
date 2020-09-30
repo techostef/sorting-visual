@@ -2,6 +2,7 @@ import ActionEnums from '../../enums/ActionEnums'
 import _ from "lodash"
 
 const init = {
+    dataSorted: false,
     endSorting: null,
     indexSort: {},
     lengthIndexSort: 0,
@@ -18,6 +19,10 @@ const settingsState = (state = init, action) => {
         case ActionEnums.SETTINGS_STATE_SET_END_SORTING:
             return Object.assign({}, state, {
                 endSorting: action.endSorting
+            })
+        case ActionEnums.SETTINGS_STATE_SET_DATA_SORTED:
+            return Object.assign({}, state, {
+                dataSorted: action.dataSorted
             })
         case ActionEnums.SETTINGS_STATE_SET_INDEX_SORT:
             return Object.assign({}, state, {
