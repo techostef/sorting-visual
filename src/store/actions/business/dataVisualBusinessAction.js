@@ -560,135 +560,110 @@ const recursiveMergeSort2 = (speed, arr, newData, loop) => {
         let newDataTemp = [...newData]
         let j = 0
         let swapping = -1
-        // let interval = setInterval(() => {
-        //     if (j >= arr[loop].length) {
-        //         clearInterval(interval)
-        //         dispatch(recursiveMergeSort2(speed, arr, newData, loop - 1))
-        //     } else {
-        //         if (i1 >= 0 && end2 >= 0) {
-        //             if (i < end2) {
-        //                 if (swapping >= 0) {
-        //                     if (swapping === 1) {
-        //                         swapping = 2
-        //                         controlSwapping.setIndex(index)
-        //                     } else if (swapping === 2) {
-        //                         swapping = 3
-        //                         controlSwapping.setIndex(indexCompare)
-        //                         dispatch(dataVisualStateAction.restoreData([...newData]))
-        //                     } else {
-        //                         controlSwapping.setIndex(-1)
-        //                         swapping = -1
-        //                     }
-        //                 } else {
-        //                     if (newDataTemp[i1] >= newDataTemp[i2]) {
-        //                         swapping = 1
-        //                         index = i2
-        //                         indexCompare = i1
-        //                         controlIndex.setIndex(i2)
-        //                         controlIndexCompare.setIndex(i1)
-        //                         newData[i] = newDataTemp[i2]
-        //                         if (i === end2 - 1) {
-        //                             newData[i + 1] = newDataTemp[i1]
-        //                         }
-        //                         i2 ++
-        //                         if (i2 > end2) {
-        //                             i++
-        //                             while(i1 <= end1) {
-        //                                 newData[i] = newDataTemp[i1]
-        //                                 i1++
-        //                                 i++
-        //                             }
-        //                         }
-        //                     } else if (newDataTemp[i2] >= newDataTemp[i1]) {
-        //                         swapping = 1
-        //                         index = i1
-        //                         indexCompare = i2
-        //                         controlIndex.setIndex(i1)
-        //                         controlIndexCompare.setIndex(i2)
-        //                         newData[i] = newDataTemp[i1]
-        //                         if (i === end2 - 1) {
-        //                             newData[i + 1] = newDataTemp[i2]
-        //                         }
-        //                         i1 ++
-        //                         if (i1 > end1) {
-        //                             i++
-        //                             while(i2 <= end2) {
-        //                                 newData[i] = newDataTemp[i2]
-        //                                 i2++
-        //                                 i++
-        //                             }
-        //                         }
-        //                     }
-        //                     i++
-        //                     dispatch(dataVisualStateAction.restoreData([...newData]))
-        //                 }
-        //             } else {
-        //                 j += 2
-        //                 i1 = end2 = -1
-        //             }
-        //         } else {
-        //             i1 = arr[loop][j].start
-        //             end1 = arr[loop][j].end
-        //             i = i1       
-
-        //             i2 = arr[loop][j + 1].start 
-        //             end2 = arr[loop][j + 1].end
-        //             console.log("loop", loop, j, arr)
-        //         }
-        //     }
-        // }, speed)
-   
-        // ---------------------------------------------------------
-        console.log("arr", arr)
-        if (loop <= 1) {
-            return false
-        }
-        for(let j = 0; j < arr[loop].length; j += 2) {
-            i1 = arr[loop][j].start
-            end1 = arr[loop][j].end
-            i = i1       
-
-            i2 = arr[loop][j + 1].start 
-            end2 = arr[loop][j + 1].end 
-            while(i < end2) {
-                if (loop === 2) {
-                    console.log("newDataTemp[i1]", i1, i2, newDataTemp[i1], newDataTemp[i2])
-                }
-                if (newDataTemp[i1] >= newDataTemp[i2]) {
-                    newData[i] = newDataTemp[i2]
-                    if (i === end2 - 1) {
-                        newData[i + 1] = newDataTemp[i1]
-                    }
-                    i2 ++
-                    if (i2 > end2) {
-                        i++
-                        while(i1 <= end1) {
-                            newData[i] = newDataTemp[i1]
-                            i1++
+        let swappingStep
+        let interval = setInterval(() => {
+            if (j >= arr[loop].length) {
+                clearInterval(interval)
+                dispatch(recursiveMergeSort2(speed, arr, [...newData], loop - 1))
+            } else {
+                if (i1 >= 0 && end2 >= 0) {
+                    if (i < end2) {
+                        if (swapping >= 0) {
+                            if (swapping === 1) {
+                                swapping = 2
+                                controlSwapping.setIndex(index)
+                            } else if (swapping === 2) {
+                                swapping = 3
+                                controlSwapping.setIndex(indexCompare)
+                                dispatch(dataVisualStateAction.restoreData([...newData]))
+                            } else if (swapping === 3) {
+                                controlSwapping.setIndex(-1)
+                                swapping = -1
+                                if (i === end2 - 1) {
+                                    swapping = 4
+                                    newData[i + 1] = newDataTemp[index]
+                                } else {
+                                    swapping = 7
+                                }
+                                
+                            }else if (swapping === 4) {
+                                controlSwapping.setIndex(indexCompare)
+                                swapping = 5
+                            } else if (swapping === 5) {
+                                controlSwapping.setIndex(index)
+                                dispatch(dataVisualStateAction.restoreData([...newData]))
+                                swapping = 6
+                            } else if (swapping === 6) {
+                                controlSwapping.setIndex(-1)
+                                swapping = 7
+                            } else if (swapping === 7) {
+                                swapping = -1
+                                if (newDataTemp[i1] >= newDataTemp[i2]) {
+                                    i2++
+                                    if (i2 > end2) {
+                                        i++
+                                        while(i1 <= end1) {
+                                            newData[i] = newDataTemp[i1]
+                                            i1++
+                                            i++
+                                        }
+                                    }
+                                }
+                                else if (newDataTemp[i2] >= newDataTemp[i1]) {
+                                    i1++
+                                    if (i1 > end1) {
+                                        i++
+                                        while(i2 <= end2) {
+                                            newData[i] = newDataTemp[i2]
+                                            i2++
+                                            i++
+                                        }
+                                    }
+                                }
+                                dispatch(dataVisualStateAction.restoreData([...newData]))
+                                i++
+                            }
+                        } else {
+                           
+                            if (newDataTemp[i1] >= newDataTemp[i2]) {
+                                objSwap = {index1: i1, index2: i2}
+                                swappingStep(objSwap)
+                                i1 = objSwap.index1
+                                i2 = objSwap.index2
+                            } else if (newDataTemp[i2] >= newDataTemp[i1]) {
+                                objSwap = {index1: i2, index2: i1}
+                                swappingStep(objSwap)
+                                i2 = objSwap.index1
+                                i1 = objSwap.index2
+                            }
+                            dispatch(dataVisualStateAction.restoreData([...newData]))
                             i++
                         }
+                    } else {
+                        j += 2
+                        i1 = end2 = -1
                     }
-                } else if (newDataTemp[i2] >= newDataTemp[i1]) {
-                    newData[i] = newDataTemp[i1]
-                    if (i === end2 - 1) {
-                        newData[i + 1] = newDataTemp[i2]
-                    }
-                    i1 ++
-                    if (i1 > end1) {
-                        i++
-                        while(i2 <= end2) {
-                            newData[i] = newDataTemp[i2]
-                            i2++
-                            i++
-                        }
-                        
+                } else {
+                    i1 = arr[loop][j].start
+                    end1 = arr[loop][j].end
+                    i = i1       
+
+                    i2 = arr[loop][j + 1].start 
+                    end2 = arr[loop][j + 1].end
+                    var objSwap
+                    swappingStep = (data) => {
+                        swapping = 1
+                        index = data.index1
+                        indexCompare = data.index2
+                        controlIndex.setIndex(data.index2)
+                        controlIndexCompare.setIndex(data.index1)
+                        newData[i] = newDataTemp[data.index2]
+                        i--
                     }
                 }
-                i++
             }
-            dispatch(dataVisualStateAction.restoreData([...newData]))
-        }
-        dispatch(recursiveMergeSort2(speed, arr, newData, loop - 1))
+            console.log("interval loop", loop)
+        }, speed)
     }
 }
 
@@ -713,11 +688,16 @@ const sortingDataMergeSort = (speed) => {
         let loop = arr.length - 1
         let interval = setInterval(() => {
             if (i >= arr[loop].length) {
-                clearInterval(interval)
-                controlIndex.setIndex(-1)
-                controlIndexCompare.setIndex(-1)
-                controlSwapping.setIndex(-1)
-                dispatch(recursiveMergeSort2(speed, arr, [...newData], loop))
+                if (loop === 0) {
+                    clearInterval(interval)
+                    dispatch(recursiveMergeSort2(speed, arr, [...newData], arr.length - 1))
+                } else {
+                    i = 0;
+                    loop -= 1
+                    controlIndex.setIndex(-1)
+                    controlIndexCompare.setIndex(-1)
+                    controlSwapping.setIndex(-1)
+                }
             } else {
                 if (swapping >= 0) {
                     if (swapping === 1) {
@@ -734,13 +714,15 @@ const sortingDataMergeSort = (speed) => {
                 } else {
                     index = arr[loop][i].start
                     indexCompare = arr[loop][i].end
-                    controlIndexCompare.setIndex(indexCompare)
-                    controlIndex.setIndex(index)
-                    if (newData[index] > newData[indexCompare]) {
-                        swapping = 1
-                        temp = newData[index]
-                        newData[index] = newData[indexCompare]
-                        newData[indexCompare] = temp
+                    if (indexCompare - index === 1) {
+                        controlIndexCompare.setIndex(indexCompare)
+                        controlIndex.setIndex(index)
+                        if (newData[index] > newData[indexCompare]) {
+                            swapping = 1
+                            temp = newData[index]
+                            newData[index] = newData[indexCompare]
+                            newData[indexCompare] = temp
+                        }
                     }
                     i ++
                 }

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
 import "./SortPageContent.scss"
 import * as dataVisualBusinessAction from "../../store/actions/business/dataVisualBusinessAction"
@@ -26,20 +26,6 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 const SortPageContent = (props) => {
-    useEffect(() => {
-        // const { dataVisualBusinessAction } = props
-        // dataVisualBusinessAction.generateDataVisual()
-    }, [])
-
-    // useEffect(() => {
-    //     const { settingsStateAction } = props
-    //     if (props.lengthIndexSort === 0) {
-    //         settingsStateAction.setRunSorting(false)
-    //         settingsStateAction.setEndSorting(new Date())
-    //     } else {
-    //         settingsStateAction.setRunSorting(true)
-    //     }
-    // }, [props.indexSort])
 
     const checkSortedItem = (item, index) => {
         const { dataVisualState, dataVisualSortedState, dataSorted } = props
