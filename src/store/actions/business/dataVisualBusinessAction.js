@@ -639,6 +639,10 @@ const recursiveMergeSort2 = (speed, arr, newData, loop) => {
         // }, speed)
    
         // ---------------------------------------------------------
+        console.log("arr", arr)
+        if (loop <= 1) {
+            return false
+        }
         for(let j = 0; j < arr[loop].length; j += 2) {
             i1 = arr[loop][j].start
             end1 = arr[loop][j].end
@@ -647,6 +651,9 @@ const recursiveMergeSort2 = (speed, arr, newData, loop) => {
             i2 = arr[loop][j + 1].start 
             end2 = arr[loop][j + 1].end 
             while(i < end2) {
+                if (loop === 2) {
+                    console.log("newDataTemp[i1]", i1, i2, newDataTemp[i1], newDataTemp[i2])
+                }
                 if (newDataTemp[i1] >= newDataTemp[i2]) {
                     newData[i] = newDataTemp[i2]
                     if (i === end2 - 1) {
@@ -709,7 +716,8 @@ const sortingDataMergeSort = (speed) => {
                 clearInterval(interval)
                 controlIndex.setIndex(-1)
                 controlIndexCompare.setIndex(-1)
-                dispatch(recursiveMergeSort2(speed, arr, newData, loop))
+                controlSwapping.setIndex(-1)
+                dispatch(recursiveMergeSort2(speed, arr, [...newData], loop))
             } else {
                 if (swapping >= 0) {
                     if (swapping === 1) {
