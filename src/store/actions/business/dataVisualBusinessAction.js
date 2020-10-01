@@ -548,6 +548,7 @@ const recursiveMergeSort2 = (speed, arr, newData, loop) => {
         if (loop >= 0) {} else loop = arr.length - 1
         if (!arr[loop] || arr[loop].length === 1) {
             dispatch(settingsStateAction.setRunSorting(false))
+            dispatch(settingsStateAction.setEndSorting(new Date()))
             return false
         }
         let controlIndex = controlClassNameSort("active", -1)
@@ -662,7 +663,6 @@ const recursiveMergeSort2 = (speed, arr, newData, loop) => {
                     }
                 }
             }
-            console.log("interval loop", loop)
         }, speed)
     }
 }
@@ -676,10 +676,7 @@ const sortingDataMergeSort = (speed) => {
         let controlIndex = controlClassNameSort("active", -1)
         let controlIndexCompare = controlClassNameSort("active", -1)
         let controlSwapping = controlClassNameSort("swapping", -1)
-        // let arr = [[{"start":0,"end":19}],[{"start":0,"end":9},{"start":10,"end":19}],[{"start":0,"end":4},{"start":5,"end":9},{"start":10,"end":14},{"start":15,"end":19}],[{"start":0,"end":2},{"start":3,"end":4},{"start":5,"end":7},{"start":8,"end":9},{"start":10,"end":12},{"start":13,"end":14},{"start":15,"end":17},{"start":18,"end":19}],[{"start":0,"end":1},{"start":2,"end":2},{"start":5,"end":6},{"start":7,"end":7},{"start":10,"end":11},{"start":12,"end":12},{"start":15,"end":16},{"start":17,"end":17}]]
-        // dispatch(recursiveMergeSort2(arr, newData, 4))
         let arr = []
-        // dispatch(getPathMergeSort(arr, newData))
         dispatch(getPathMergeSort(arr, newData))
         let index
         let indexCompare
