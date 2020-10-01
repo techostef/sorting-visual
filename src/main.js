@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App.js';
+import './App.scss';
 
 import "./assets/css/tailwind.css"
 import "./assets/css/tailwind-extend.css"

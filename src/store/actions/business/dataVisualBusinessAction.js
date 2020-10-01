@@ -733,6 +733,9 @@ export const sortingDataVisual = () => {
     return (dispatch, getState) => {
         const state = getState()
         const { dataVisualSortedState, settingsState, sortState } = state
+        if (settingsState.dataSorted === true) {
+            return false
+        }
         const selectedSortItem = sortState.find((item) => item.isSelected)
         let speed = settingsState.speed * 10
         dispatch(settingsStateAction.setRunSorting(true))

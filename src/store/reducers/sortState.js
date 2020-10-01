@@ -4,7 +4,7 @@ import { SORT_TYPE } from '../../enums/DataEnums'
 const init = [
     {
         Id: 1,
-        isSelected: false,
+        isSelected: true,
         name: SORT_TYPE.BUBLE_SORT,
     },
     {
@@ -19,7 +19,7 @@ const init = [
     },
     {
         Id: 4,
-        isSelected: true,
+        isSelected: false,
         name: SORT_TYPE.MERGE_SORT
     },
 ]
